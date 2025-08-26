@@ -9,6 +9,12 @@ import AboutScreen from "../screens/AboutScreen";
 import TabNavigator from "./TabNavigator";
 import ProfileScreen from "../screens/ProfileScreen";
 import MyShopScreen from "../screens/MyShopScreen";
+import EditShopInfoScreen from "../screens/EditShopInfoScreen";
+import BankDetailsScreen from "../screens/BankDetailsScreen";
+import EditBankDetailsScreen from "../screens/EditBankDetailsScreen";
+import MyWalletScreen from "../screens/MyWalletScreen";
+import HelpAndSupportScreen from "../screens/HelpAndSupportScreen";
+import FAQScreen from "../screens/FAQScreen";
 
 export type RootStackParamList = {
   Splash: undefined;
@@ -16,6 +22,19 @@ export type RootStackParamList = {
   SignUp: undefined;
   About: undefined;
   Dashboard: undefined;
+  Profile: undefined;
+  MyShop: undefined;
+  EditShopInfoScreen: {
+    shopName?: string;
+    gstin?: string;
+    ownerName?: string;
+    mobile?: string;
+    email?: string;
+    address?: string;
+    shopTime?: string;
+  };
+  BankDetailsScreen: undefined;
+  EditBankDetailsScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -29,6 +48,15 @@ const StackNavigator = () => {
       <Stack.Screen name="About" component={AboutScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="MyShop" component={MyShopScreen} />
+      <Stack.Screen name="EditShopInfoScreen" component={EditShopInfoScreen} />
+      <Stack.Screen name="BankDetailsScreen" component={BankDetailsScreen} />
+      <Stack.Screen name="MyWalletScreen" component={MyWalletScreen} />
+      <Stack.Screen name="HelpAndSupportScreen" component={HelpAndSupportScreen} />
+      <Stack.Screen name="FAQScreen" component={FAQScreen} />
+      <Stack.Screen
+        name="EditBankDetailsScreen"
+        component={EditBankDetailsScreen}
+      />
 
       <Stack.Screen
         name="Dashboard"

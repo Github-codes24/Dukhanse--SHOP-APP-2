@@ -9,14 +9,36 @@ import {
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
-export default function MyShopScreen({ navigation }: any) {
-  const [shopName, setShopName] = useState("");
-  const [gstin, setGstin] = useState("");
-  const [ownerName, setOwnerName] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
-  const [shopTime, setShopTime] = useState("");
+export default function EditShopInfoScreen({ route, navigation }: any) {
+  const {
+    shopName: initialShopName,
+    gstin: initialGstin,
+    ownerName: initialOwnerName,
+    mobile: initialMobile,
+    email: initialEmail,
+    address: initialAddress,
+    shopTime: initialShopTime,
+  } = route.params;
+
+  const [shopName, setShopName] = useState(initialShopName || "");
+  const [gstin, setGstin] = useState(initialGstin || "");
+  const [ownerName, setOwnerName] = useState(initialOwnerName || "");
+  const [mobile, setMobile] = useState(initialMobile || "");
+  const [email, setEmail] = useState(initialEmail || "");
+  const [address, setAddress] = useState(initialAddress || "");
+  const [shopTime, setShopTime] = useState(initialShopTime || "");
+
+  const handleUpdate = () => {
+    navigation.navigate("MyShopScreen", {
+      shopName,
+      gstin,
+      ownerName,
+      mobile,
+      email,
+      address,
+      shopTime,
+    });
+  };
 
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
@@ -25,47 +47,30 @@ export default function MyShopScreen({ navigation }: any) {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <MaterialIcons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>My Shop</Text>
+        <Text style={styles.headerTitle}>Edit Shop Info</Text>
       </View>
 
-      {/* Shop Image */}
-      <View style={styles.dpContainer}>
-        <View style={styles.dp}></View>
-      </View>
-
-      {/* Shop Details Inputs */}
+      {/* Editable Inputs */}
       <View style={styles.detailsBox}>
         <Text style={styles.label}>Shop Name</Text>
-        <TextInput
-          style={styles.input}
-          value={shopName}
-          onChangeText={setShopName}
-          placeholder="Enter your shop name"
-        />
+        <TextInput style={styles.input} value={shopName} onChangeText={setShopName} />
 
         <Text style={styles.label}>GSTIN Number</Text>
         <TextInput
           style={styles.input}
           value={gstin}
           onChangeText={setGstin}
-          placeholder="Enter GSTIN number"
           keyboardType="numeric"
         />
 
         <Text style={styles.label}>Shop Owner’s Name</Text>
-        <TextInput
-          style={styles.input}
-          value={ownerName}
-          onChangeText={setOwnerName}
-          placeholder="Enter owner's name"
-        />
+        <TextInput style={styles.input} value={ownerName} onChangeText={setOwnerName} />
 
         <Text style={styles.label}>Mobile Number</Text>
         <TextInput
           style={styles.input}
           value={mobile}
           onChangeText={setMobile}
-          placeholder="Enter mobile number"
           keyboardType="phone-pad"
         />
 
@@ -74,7 +79,6 @@ export default function MyShopScreen({ navigation }: any) {
           style={styles.input}
           value={email}
           onChangeText={setEmail}
-          placeholder="Enter email"
           keyboardType="email-address"
         />
 
@@ -83,37 +87,17 @@ export default function MyShopScreen({ navigation }: any) {
           style={[styles.input, { height: 70 }]}
           value={address}
           onChangeText={setAddress}
-          placeholder="Enter address"
           multiline
         />
 
         <Text style={styles.label}>Shop Time</Text>
-        <TextInput
-          style={styles.input}
-          value={shopTime}
-          onChangeText={setShopTime}
-          placeholder="e.g. 08:00 AM to 08:00 PM"
-        />
+        <TextInput style={styles.input} value={shopTime} onChangeText={setShopTime} />
       </View>
 
-      {/* Save Button */}
-     <TouchableOpacity
-  style={styles.editBtn}
-  onPress={() =>
-    navigation.navigate("EditShopInfoScreen", {   // ✅ use the correct name
-      shopName,
-      gstin,
-      ownerName,
-      mobile,
-      email,
-      address,
-      shopTime,
-    })
-  }
->
-  <Text style={styles.editBtnText}>Edit Shop Info</Text>
-</TouchableOpacity>
-
+      {/* Update Button */}
+      <TouchableOpacity style={styles.updateBtn} onPress={handleUpdate}>
+        <Text style={styles.updateBtnText}>Update Shop Info</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -130,14 +114,6 @@ const styles = StyleSheet.create({
   },
   headerTitle: { fontSize: 18, fontWeight: "700", marginLeft: 12 },
 
-  dpContainer: { alignItems: "center", marginVertical: 20 },
-  dp: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: "#eee",
-  },
-
   detailsBox: { paddingHorizontal: 20, paddingBottom: 10 },
   label: { fontSize: 14, color: "#888", marginTop: 12 },
   input: {
@@ -152,12 +128,12 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
 
-  editBtn: {
+  updateBtn: {
     margin: 20,
-    backgroundColor: "#F9A825",
+    backgroundColor: "#43A047",
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: "center",
   },
-  editBtnText: { fontSize: 15, fontWeight: "700", color: "#fff" },
+  updateBtnText: { fontSize: 15, fontWeight: "700", color: "#fff" },
 });
