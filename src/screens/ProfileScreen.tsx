@@ -17,11 +17,11 @@ export default function ProfileScreen() {
 
   const menuOptions = [
     { id: "1", title: "My Shop", icon: "storefront", route: "MyShop" },
-    { id: "2", title: "KYC Details", icon: "description" },
+    { id: "2", title: "KYC Details", icon: "description", route:"KYCDetailsScreens" },
     { id: "3", title: "Bank Details", icon: "account-balance", route: "BankDetailsScreen" },
     { id: "4", title: "Gullak", icon: "savings", route: "MyWalletScreen"  },
     { id: "5", title: "Help & Support", icon: "help-outline", route: "HelpAndSupportScreen"  },
-    { id: "6", title: "Policies", icon: "policy" },
+    { id: "6", title: "Policies", icon: "policy" ,route:"PolicyScreen"},
     { id: "7", title: "Sign Out", icon: "logout" },
   ];
 

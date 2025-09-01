@@ -9,12 +9,18 @@ import {
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
+const bankPassport =require("../assets/images/bankPassbook.png")
+
 export default function BankDetailsScreen({ navigation }: any) {
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          // onPress={() => navigation.goBack()}
+          style={styles.backButton}
+          activeOpacity={0.7}
+        >
           <MaterialIcons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Bank Details</Text>
@@ -46,7 +52,7 @@ export default function BankDetailsScreen({ navigation }: any) {
 
       {/* Bank Illustration */}
       <Image
-        // source={require("../assets/bank-illustration.png")}
+         source={bankPassport}
         style={styles.illustration}
         resizeMode="contain"
       />
@@ -63,8 +69,7 @@ export default function BankDetailsScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
-
+  container: { flex: 1, backgroundColor: "#fff",marginTop:28 },
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -72,14 +77,24 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
   },
-  headerTitle: { fontSize: 18, fontWeight: "700", marginLeft: 12 },
+  backButton: {
+    height: 40,
+    width: 40,
+    borderRadius: 20, // circle
+    borderWidth: 1,
+    borderColor: "#000",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff", // optional
+  },
+  headerTitle: { fontSize: 18, fontWeight: "600", marginLeft: 12,color:"#000" },
 
   card: {
     backgroundColor: "#fff",
     margin: 16,
     padding: 16,
     borderRadius: 12,
-    elevation: 2,
+    elevation: 1,
     shadowColor: "#000",
     shadowOpacity: 0.05,
     shadowOffset: { width: 0, height: 2 },
@@ -96,10 +111,10 @@ const styles = StyleSheet.create({
 
   editBtn: {
     margin: 20,
-    backgroundColor: "#F9A825",
+    backgroundColor: "#Ffd700",
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: "center",
   },
-  editBtnText: { fontSize: 15, fontWeight: "700", color: "#fff" },
+  editBtnText: { fontSize: 14, fontWeight: "500", color: "#000" },
 });

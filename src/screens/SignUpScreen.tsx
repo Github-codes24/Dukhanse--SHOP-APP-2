@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,14 +7,49 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Modal,
+  FlatList,
+  TouchableHighlight,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+
+interface City {
+  _id: string;
+  cityName: string;
+}
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
   const [isOtpVisible, setOtpVisible] = useState(false);
   const [otpValues, setOtpValues] = useState<string[]>(Array(6).fill(""));
   const [phoneNumber, setPhoneNumber] = useState("");
+
+  const [isCityModalVisible, setCityModalVisible] = useState(false);
+  const [cities, setCities] = useState<City[]>([]);
+  const [selectedCity, setSelectedCity] = useState<City | null>(null);
+
+  useEffect(() => {
+    if (isCityModalVisible) {
+      fetchCities();
+    }
+  }, [isCityModalVisible]);
+
+  const fetchCities = async () => {
+    try {
+      const response = await fetch(
+        "https://dukanse-be-jq9m.onrender.com/api/cityNames/getAllCities",
+      );
+      const json = await response.json();
+      setCities(json.data || []);
+    } catch (error) {
+      Alert.alert("Error", "Failed to fetch cities");
+    }
+  };
+
+  const handleCitySelect = (city: City) => {
+    setSelectedCity(city);
+    setCityModalVisible(false);
+  };
 
   const handleSendOtp = () => {
     if (!phoneNumber) {
@@ -27,8 +62,7 @@ const SignUpScreen = () => {
   const handleVerify = () => {
     const otp = otpValues.join("");
     console.log("Entered OTP:", otp);
-    // ✅ Replace this with your backend OTP verify
-    // navigation.navigate("LocationAccessScreen" as never);
+    // navigation or further logic here
   };
 
   const handleOtpChange = (value: string, index: number) => {
@@ -38,98 +72,133 @@ const SignUpScreen = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>Dukaanसे</Text>
-      <Text style={styles.title}>Sign Up</Text>
-      <Text style={styles.subtitle}>Register to take your store online</Text>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Text style={styles.header}>Dukaanसे</Text>
+        <Text style={styles.title}>Sign Up</Text>
+        <Text style={styles.subtitle}>Register to take your store online</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Enter shop name"
-        placeholderTextColor="#888"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Enter GSTIN Number"
-        placeholderTextColor="#888"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Enter shop owner name"
-        placeholderTextColor="#888"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Enter mobile number"
-        placeholderTextColor="#888"
-        keyboardType="phone-pad"
-        value={phoneNumber}
-        onChangeText={setPhoneNumber}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Enter referral code (optional)"
-        placeholderTextColor="#888"
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Enter shop name"
+          placeholderTextColor="#888"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Enter shop owner name"
+          placeholderTextColor="#888"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Enter mobile number"
+          placeholderTextColor="#888"
+          keyboardType="phone-pad"
+          value={phoneNumber}
+          onChangeText={setPhoneNumber}
+        />
 
-      {!isOtpVisible ? (
-        <TouchableOpacity style={styles.otpButton} onPress={handleSendOtp}>
-          <Text style={styles.otpButtonText}>Send OTP</Text>
-        </TouchableOpacity>
-      ) : (
-        <>
-          <View style={styles.otpContainer}>
-            {otpValues.map((digit, index) => (
-              <TextInput
-                key={index}
-                style={styles.otpInput}
-                keyboardType="number-pad"
-                maxLength={1}
-                value={digit}
-                onChangeText={(value) => handleOtpChange(value, index)}
-              />
-            ))}
-          </View>
-          <TouchableOpacity style={styles.otpButton} onPress={handleVerify}>
-            <Text style={styles.otpButtonText}>Verify OTP</Text>
-          </TouchableOpacity>
-        </>
-      )}
-
-      <Text style={styles.footerText}>
-        Already have an account?{" "}
-        <Text
-          style={styles.signInLink}
-          onPress={() => navigation.navigate("SignInScreen" as never)}
+        {/* City Selector */}
+        <TouchableOpacity
+          style={[styles.input, { justifyContent: "center" }]}
+          onPress={() => setCityModalVisible(true)}
         >
-          Sign In
-        </Text>
-      </Text>
+          <Text style={{ color: selectedCity ? "#000" : "#888" }}>
+            {selectedCity ? selectedCity.cityName : "Select City"}
+          </Text>
+        </TouchableOpacity>
 
-      <Text
-        style={styles.skipLink}
-        onPress={() => navigation.navigate("About" as never)}
-      >
-        Skip and go
-      </Text>
-    </ScrollView>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter referral code (optional)"
+          placeholderTextColor="#888"
+        />
+
+        {!isOtpVisible ? (
+          <TouchableOpacity style={styles.otpButton} onPress={handleSendOtp}>
+            <Text style={styles.otpButtonText}>Send OTP</Text>
+          </TouchableOpacity>
+        ) : (
+          <>
+            <View style={styles.otpContainer}>
+              {otpValues.map((digit, index) => (
+                <TextInput
+                  key={index}
+                  style={styles.otpInput}
+                  keyboardType="number-pad"
+                  maxLength={1}
+                  value={digit}
+                  onChangeText={(value) => handleOtpChange(value, index)}
+                />
+              ))}
+            </View>
+            <TouchableOpacity style={styles.otpButton} onPress={handleVerify}>
+              <Text style={styles.otpButtonText}>Verify OTP</Text>
+            </TouchableOpacity>
+          </>
+        )}
+
+        <Text style={styles.footerText}>
+          Already have an account?{" "}
+          <Text
+            style={styles.signInLink}
+            onPress={() => navigation.navigate("SignInScreen" as never)}
+          >
+            Sign In
+          </Text>
+        </Text>
+
+        {/* <Text
+          style={styles.skipLink}
+          onPress={() => navigation.navigate("About" as never)}
+        >
+          Skip and go
+        </Text> */}
+      </ScrollView>
+
+      {/* City Modal - outside ScrollView */}
+      <Modal visible={isCityModalVisible} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Select City</Text>
+            <FlatList
+              data={cities}
+              keyExtractor={(item) => item._id}
+              renderItem={({ item }) => (
+                <TouchableHighlight
+                  underlayColor="#EEE"
+                  onPress={() => handleCitySelect(item)}
+                >
+                  <View style={styles.cityItem}>
+                    <Text style={styles.cityName}>{item.cityName}</Text>
+                  </View>
+                </TouchableHighlight>
+              )}
+              ListEmptyComponent={<Text>No cities available</Text>}
+            />
+            <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={() => setCityModalVisible(false)}
+            >
+              <Text style={{ color: "#D32F2F" }}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 };
 
-export default SignUpScreen;
-
 const styles = StyleSheet.create({
-  container: {
+  container: { flex: 1, backgroundColor: "#fff" },
+  scrollContent: {
     flexGrow: 1,
-    backgroundColor: "#fff",
-    paddingHorizontal: 24,
-    justifyContent: "center",
     alignItems: "center",
-    paddingTop: 40,
+    paddingHorizontal: 24,
+    paddingTop: 50,
     paddingBottom: 24,
   },
   header: {
-    fontSize: 32,
+    fontSize: 30,
     color: "#EC2D01",
     fontWeight: "600",
     marginBottom: 10,
@@ -166,11 +235,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginBottom: 20,
   },
-  otpButtonText: {
-    color: "#D32F2F",
-    fontSize: 14,
-    fontWeight: "600",
-  },
+  otpButtonText: { color: "#D32F2F", fontSize: 14, fontWeight: "600" },
   otpContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -187,18 +252,37 @@ const styles = StyleSheet.create({
     width: 45,
     height: 50,
   },
-  footerText: {
-    fontSize: 14,
+  footerText: { fontSize: 14, color: "#000" },
+  signInLink: { color: "#D32F2F", fontWeight: "600" },
+  skipLink: { marginTop: 10, color: "blue", fontWeight: "600", fontSize: 14 },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    paddingHorizontal: 40,
+  },
+  modalContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    maxHeight: "60%",
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+  },
+  modalTitle: {
+    fontSize: 20,
     color: "#000",
+    fontWeight: "700",
+    marginBottom: 12,
+    alignSelf: "center",
   },
-  signInLink: {
-    color: "#D32F2F",
-    fontWeight: "600",
+  cityItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderBottomColor: "#eee",
+    borderBottomWidth: 1,
   },
-  skipLink: {
-    marginTop: 10,
-    color: "blue",
-    fontWeight: "600",
-    fontSize: 14,
-  },
+  cityName: { fontSize: 16, color: "#222" },
+  modalCloseButton: { paddingVertical: 12, alignItems: "center" },
 });
+
+export default SignUpScreen;

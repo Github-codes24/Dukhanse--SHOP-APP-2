@@ -7,8 +7,19 @@ import {
   TouchableOpacity,
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { useNavigation,NavigationProp } from '@react-navigation/native';
 
-export default function MyWalletScreen({ navigation }: any) {
+
+
+type RootStackParamList = {
+  TransactionsScreen: undefined; 
+  ReferralScreen:undefined;
+  UpcomingPaymentsScreen:undefined;
+  
+};
+export default function MyWalletScreen() {
+ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
@@ -16,30 +27,30 @@ export default function MyWalletScreen({ navigation }: any) {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <MaterialIcons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>My Wallet</Text>
+        <Text style={styles.headerTitle}>Gullak</Text>
       </View>
 
       {/* Balance Cards */}
       <View style={styles.cardsContainer}>
-        <View style={[styles.card, { backgroundColor: "#FFE5E5" }]}>
+        <TouchableOpacity style={[styles.card, { backgroundColor: "#FFE5E5" }]}  onPress={()=>navigation.navigate("TransactionsScreen")}>
           <Text style={styles.cardValue}>₹ 25,796.00</Text>
           <Text style={styles.cardLabel}>Balance</Text>
-        </View>
-        <View style={[styles.card, { backgroundColor: "#E6F2FF" }]}>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.card, { backgroundColor: "#E6F2FF" }]} onPress={()=>navigation.navigate("ReferralScreen")}>
           <Text style={styles.cardValue}>₹ 1,796.00</Text>
-          <Text style={styles.cardLabel}>Commission</Text>
-        </View>
+          <Text style={styles.cardLabel}>Referral</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.cardsContainer}>
-        <View style={[styles.card, { backgroundColor: "#E9F9EF" }]}>
+        <TouchableOpacity style={[styles.card, { backgroundColor: "#E9F9EF" }]} onPress={()=>navigation.navigate("UpcomingPaymentsScreen")} >
           <Text style={styles.cardValue}>₹ 5,796.00</Text>
           <Text style={styles.cardLabel}>Upcoming Payment</Text>
-        </View>
-        <View style={[styles.card, { backgroundColor: "#FFF7E6" }]}>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.card, { backgroundColor: "#FFF7E6" }]}>
           <Text style={styles.cardValue}>₹ 1,796.00</Text>
-          <Text style={styles.cardLabel}>Referral</Text>
-        </View>
+          <Text style={styles.cardLabel}>Payout</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Upcoming Payouts */}
@@ -103,7 +114,7 @@ export default function MyWalletScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
+  container: { flex: 1, backgroundColor: "#fff",margin:0,marginTop:26 },
 
   header: {
     flexDirection: "row",

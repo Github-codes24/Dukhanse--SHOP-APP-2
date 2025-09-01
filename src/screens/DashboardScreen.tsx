@@ -1,8 +1,22 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
 
+type RootStackParamList = {
+  NotificationScreen: undefined;
+  // add other screen names here if needed
+};
 
-const DashboardScreen = () => {
+const DashboardScreen: React.FC = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -10,8 +24,11 @@ const DashboardScreen = () => {
           <Text style={styles.storeName}>Jagdish Grocery Store</Text>
           <Text style={styles.address}>📍 457 Washington Ave.</Text>
         </View>
-        <TouchableOpacity>
-          {/* <Icon name="notifications-outline" size={26} color="#333" /> */}
+        <TouchableOpacity
+          style={{ height: 26, width: 26, marginRight: 12 }}
+          onPress={() => navigation.navigate("NotificationScreen")}
+        >
+          <MaterialIcons name="notifications-none" size={26} color="#333" />
         </TouchableOpacity>
       </View>
 
@@ -72,12 +89,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 16,
-   marginTop:29
+    marginTop: 29,
   },
   storeName: { fontSize: 16, fontWeight: "600", color: "#000" },
   address: { fontSize: 12, color: "#666" },
   row: { flexDirection: "row", justifyContent: "space-between", marginBottom: 16 },
-  rowBetween: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  rowBetween: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   card: {
     flex: 1,
     backgroundColor: "#ffe5e5",

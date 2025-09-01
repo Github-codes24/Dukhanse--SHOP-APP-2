@@ -1,139 +1,195 @@
-import React, { useState } from "react";
+import React from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   TextInput,
-  ScrollView,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+  StyleSheet,
+ 
+} from 'react-native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation,NavigationProp } from '@react-navigation/native';
 
-export default function HelpAndSupportScreen() {
-  const navigation = useNavigation();
-  const [query, setQuery] = useState("");
 
-  const handleFaqPress = (issue: string) => {
-    navigation.navigate("FAQScreen", { issue });
-  };
-
+type RootStackParamList = {
+  OrderRelatedScreen: undefined; 
+  AccountRelatedScreen:undefined;
+  PaymentRelatedScreen:undefined;
+  FeedbackComplaintsScreen:undefined;
+  SafetyRelatedScreen:undefined;
+};
+const HelpSupportScreen: React.FC<{ navigation?: any }> = ({  }) => {
+ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 20 }}>
+    <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <MaterialIcons name="arrow-back" size={24} color="#000" />
+      <View style={styles.headerRow}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation?.goBack()}>
+          <MaterialIcons name="arrow-back" size={24} color="#222" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Help & Support</Text>
+        <Text style={styles.screenTitle}>Help & Support</Text>
       </View>
 
-      {/* FAQ Links */}
-      <View style={styles.faqSection}>
-        <Text style={styles.faqTitle}>FAQ</Text>
-        <TouchableOpacity onPress={() => handleFaqPress("Payment Related Issue")}>
-          <Text style={styles.faqLink}>Payment Related Issues</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleFaqPress("Bank Related Issue")}>
-          <Text style={styles.faqLink}>Bank Related Issues</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleFaqPress("Order Related Issue")}>
-          <Text style={styles.faqLink}>Order Related Issues</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleFaqPress("Other Issue")}>
-          <Text style={styles.faqLink}>Others Issues</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Query Box */}
-      <View style={styles.querySection}>
-        <View style={styles.queryHeader}>
-          <Text style={styles.queryTitle}>Raise Your Query</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("TicketsScreen")}>
-            <Text style={styles.viewAll}>VIEW ALL TICKETS</Text>
-          </TouchableOpacity>
+      {/* Greeting Card */}
+      <View style={styles.helpCard}>
+        <Text style={styles.helpCardTitle}>Hey,</Text>
+        <View style={styles.helpRow}>
+          <Text style={styles.helpCardDesc}>How Can we Help You ?</Text>
+          <View style={styles.helpIconCircle}>
+            <MaterialIcons name="help-outline" size={32} color="#E9571F" />
+          </View>
         </View>
+      </View>
 
+      {/* Search Input */}
+      <View style={styles.searchBox}>
+        <MaterialIcons name="search" size={22} color="#888" />
         <TextInput
-          style={styles.textInput}
-          placeholder="Write your query here."
+          placeholder="Search"
           placeholderTextColor="#888"
-          value={query}
-          onChangeText={setQuery}
-          multiline
+          style={styles.searchInput}
         />
-
-        <TouchableOpacity style={styles.complaintButton}>
-          <Text style={styles.complaintButtonText}>Raise a Complaint</Text>
-        </TouchableOpacity>
       </View>
 
-      {/* Call Us Section */}
-      <View style={styles.callSection}>
-        <Text style={styles.callTitle}>Need Further Assistance?</Text>
-        <Text style={styles.callSubtitle}>We are here to help you!</Text>
-        <TouchableOpacity style={styles.callButton}>
-          <MaterialIcons name="call" size={20} color="#000" />
-          <Text style={styles.callButtonText}> Call Us</Text>
+      {/* Categories Title */}
+      <Text style={styles.categoryTitle}>Categories</Text>
+
+      {/* Categories (No map or FlatList) */}
+      <View style={styles.categoriesList}>
+        <TouchableOpacity style={styles.categoryCard} onPress={()=>navigation.navigate("OrderRelatedScreen")}>
+          <Text style={styles.categoryText}>Order Related</Text>
+          <MaterialIcons name="chevron-right" size={24} color="#888" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.categoryCard} onPress={()=>navigation.navigate("AccountRelatedScreen")}>
+          <Text style={styles.categoryText}>Account & Profile</Text>
+          <MaterialIcons name="chevron-right" size={24} color="#888" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.categoryCard} onPress={()=>navigation.navigate("PaymentRelatedScreen")}>
+          <Text style={styles.categoryText}>Payment, Gullak & Rewards</Text>
+          <MaterialIcons name="chevron-right" size={24} color="#888" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.categoryCard} onPress={()=>navigation.navigate("FeedbackComplaintsScreen")}>
+          <Text style={styles.categoryText}>Feedback & Complaints</Text>
+          <MaterialIcons name="chevron-right" size={24} color="#888" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.categoryCard} onPress={()=>navigation.navigate("SafetyRelatedScreen")}>
+          <Text style={styles.categoryText}>Safety</Text>
+          <MaterialIcons name="chevron-right" size={24} color="#888" />
         </TouchableOpacity>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", paddingHorizontal: 16 },
-  header: { flexDirection: "row", alignItems: "center", paddingVertical: 12 },
-  headerTitle: { fontSize: 18, fontWeight: "600", marginLeft: 12, color: "#000" },
-  faqSection: { marginTop: 10 },
-  faqTitle: { fontSize: 16, fontWeight: "600", marginBottom: 8, color: "#000" },
-  faqLink: { fontSize: 14, color: "#007BFF", marginBottom: 6 },
-  querySection: { marginTop: 20 },
-  queryHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  queryTitle: { fontSize: 16, fontWeight: "600", color: "#000" },
-  viewAll: { fontSize: 12, color: "red", fontWeight: "500" },
-  textInput: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    minHeight: 100,
-    padding: 10,
-    fontSize: 14,
-    textAlignVertical: "top",
-    backgroundColor: "#fff",
-  },
-  complaintButton: {
-    backgroundColor: "#FFB300",
-    paddingVertical: 14,
-    borderRadius: 8,
-    alignItems: "center",
+  container: { flex: 1, backgroundColor: '#fff', paddingHorizontal: 14,marginTop:0 },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 12,
+    marginBottom: 8,
   },
-  complaintButtonText: { color: "#000", fontWeight: "600", fontSize: 15 },
-  callSection: {
-    marginTop: 24,
-    alignItems: "center",
-    padding: 16,
+  backButton: {
+    height: 38,
+    width: 38,
+    borderRadius: 19,
     borderWidth: 1,
-    borderColor: "#eee",
-    borderRadius: 10,
-    backgroundColor: "#fff",
+    borderColor: '#d4d4d4',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    marginRight: 12,
   },
-  callTitle: { fontSize: 16, fontWeight: "600", color: "#000" },
-  callSubtitle: { fontSize: 13, color: "#555", marginVertical: 6 },
-  callButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FFB300",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+  screenTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#222',
+    textAlign: 'left',
+  },
+  helpCard: {
+    backgroundColor: '#FFC107',
+    borderRadius: 12,
+    padding: 18,
+    marginVertical: 8,
+  },
+  helpCardTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#222',
+    marginBottom: 4,
+  },
+  helpRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  helpCardDesc: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#222',
+  },
+  helpIconCircle: {
+  //   marginLeft: 8,
+  //   // height: 38,
+  //   // width: 38,
+  //   borderRadius: 19,
+  //   backgroundColor: '#fff4e0',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   borderWidth: 1,
+  //   borderColor: '#FFD580',
+   },
+  searchBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e6e6e6',
+    backgroundColor: '#fafafa',
+    borderRadius: 9,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    marginTop: 15,
+    marginBottom: 16,
+  },
+  searchInput: {
+    marginLeft: 9,
+    fontSize: 16,
+    color: '#333',
+    flex: 1,
+    padding: 0,
+  },
+  categoryTitle: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#222',
+    marginBottom: 8,
+  },
+  categoriesList: {
+    marginBottom: 18,
+  },
+  categoryCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f9f9f9',
     borderRadius: 8,
-    marginTop: 10,
+    paddingVertical:10,
+    paddingHorizontal: 18,
+    marginBottom: 10,
+    shadowColor: "#bbb",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.11,
+    shadowRadius: 3,
+    elevation: 2,
+    justifyContent: 'space-between',
   },
-  callButtonText: { fontSize: 15, fontWeight: "600", color: "#000" },
+  categoryText: {
+    fontSize: 14,
+    color: '#222',
+    fontWeight: '400',
+  },
+  
+
 });
+
+export default HelpSupportScreen;
