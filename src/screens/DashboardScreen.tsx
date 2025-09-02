@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 type RootStackParamList = {
   NotificationScreen: undefined;
@@ -15,13 +17,15 @@ type RootStackParamList = {
 };
 
 const DashboardScreen: React.FC = () => {
+
+    const user = useSelector((state: RootState) => state.user);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.storeName}>Jagdish Grocery Store</Text>
+          <Text style={styles.storeName}>{user.ownerName}</Text>
           <Text style={styles.address}>📍 457 Washington Ave.</Text>
         </View>
         <TouchableOpacity
